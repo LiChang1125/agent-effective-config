@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": ["Read"]
+  },
+  "hooks": {
+    "NeverRuns": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node --version" }
+        ]
+      }
+    ]
+  }
+}

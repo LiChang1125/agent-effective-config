@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "missing-local-server": {
+      "command": "aec-fixture-missing-mcp-executable",
+      "args": []
+    }
+  }
+}

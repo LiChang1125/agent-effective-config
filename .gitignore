@@ -1,0 +1,7 @@
+node_modules/
+coverage/
+.local/
+work/
+.DS_Store
+*.log
+tmp/
