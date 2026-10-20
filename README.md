@@ -1,86 +1,172 @@
-# Agent Effective Config (`aec`)
+<p align="center">
+  <img src="outputs/aec-mascot.svg" alt="Agent Effective Config mascot holding a configuration scanner" width="132" />
+</p>
 
-**Probe-first diagnostics for the rules, skills, permissions, hooks, and MCP servers that an AI coding agent can actually use.**
+<h1 align="center">Agent Effective Config <code>aec</code></h1>
 
-## Demo
+<p align="center">
+  <strong>Know what your AI coding agent actually loaded.</strong><br />
+  Probe-first diagnostics for rules, skills, permissions, hooks, and MCP servers across Claude Code, Codex, and Cursor.
+</p>
 
-![demo](demo.gif)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8B5CF6?style=for-the-badge" alt="MIT license" /></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A518-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js 18 or newer" /></a>
+  <a href="test/aec.test.js"><img src="https://img.shields.io/badge/tests-10%20passing-22C55E?style=for-the-badge&logo=githubactions&logoColor=white" alt="10 tests passing" /></a>
+  <img src="https://img.shields.io/badge/runtime%20dependencies-0-0891B2?style=for-the-badge" alt="Zero runtime dependencies" />
+</p>
 
-Run `aec` against the Codex fixture and it separates declarations from observations: `AGENTS.override.md` replaces `AGENTS.md`, an MCP executable is missing, and operation-specific permissions and hooks remain explicitly unverified. Each conclusion includes the evidence and the limit of what was observed.
+<p align="center">
+  <a href="#demo">Demo</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#core-features">Features</a> ·
+  <a href="#evidence-levels">Evidence model</a> ·
+  <a href="#tested-agents">Agent support</a>
+</p>
 
-## Why this exists
+---
 
-Static scanners can show that a config file exists, but not whether an agent loaded it, whether a higher-priority source replaced it, or whether a hook ever registered. That gap turns regressions after agent upgrades and “works on my machine” rule failures into guesswork. `aec` reports only what its evidence can support.
+<a id="demo"></a>
 
-## Quick start
+## 🎬 Demo
 
-From the repository root:
+<p align="center">
+  <img src="demo.gif" alt="Real aec Codex diagnostic session" width="100%" />
+</p>
+
+Run `aec` against the Codex fixture and it separates declarations from observations: `AGENTS.override.md` replaces `AGENTS.md`, an MCP executable is missing, and operation-specific permissions and hooks remain explicitly unverified. Every conclusion includes its evidence and the limit of what was observed.
+
+> [!TIP]
+> `fixtures/scenario-b` is intentionally misconfigured so a fresh clone produces useful findings immediately—without changing your machine or repository.
+
+## 💡 Why this exists
+
+Static scanners can prove that a configuration file exists. They cannot prove that an agent loaded it, that a higher-priority source did not replace it, or that a hook and MCP server were present at runtime. `aec` closes that gap without pretending uncertain evidence is certain.
+
+| Question | What `aec` reports |
+|---|---|
+| **What was declared?** | Every recognized configuration source and its priority. |
+| **What was observable?** | Safe runtime receipts, canary results, parse failures, and missing executables. |
+| **What can be concluded?** | One of four evidence levels, with a reason and explicit limitation. |
+
+<a id="quick-start"></a>
+
+## 🚀 Quick start
 
 ```sh
+git clone https://github.com/LiChang1125/agent-effective-config.git
+cd agent-effective-config
 AEC_INSTALL_DIR="$PWD/.local/bin" ./install.sh
-export PATH="$PWD/.local/bin:$PATH"
-aec --cwd fixtures/scenario-b
-aec --cwd fixtures/scenario-b --json
+./.local/bin/aec --cwd fixtures/scenario-b --agent codex
+./.local/bin/aec --cwd fixtures/scenario-b --agent codex --json
 ```
 
-Node.js 18 or newer is required. macOS and Linux are supported; native Windows via Git Bash is currently experimental. The installer writes only to `AEC_INSTALL_DIR`; without that variable it clearly announces and uses `$HOME/.local/bin`.
+Node.js 18 or newer is required. macOS and Linux are supported; native Windows through Git Bash is currently experimental. The installer writes only to `AEC_INSTALL_DIR`; without it, the script clearly announces and uses `$HOME/.local/bin`.
 
-## Core features
+<details>
+<summary><strong>CLI options</strong></summary>
 
-- Discovers agent configuration and computes source precedence from the repository root to the requested directory.
-- Runs opt-in, zero-repository-write canaries with `--probe`; temporary or live operations use read-only agent modes where available.
-- Keeps every result in one of four evidence levels and never turns an ordinary model miss into “not loaded.”
-- Emits a stable JSON contract with `--json` and a status-grouped, highlighted terminal report by default.
+| Option | Purpose |
+|---|---|
+| `--cwd <directory>` | Diagnose a specific working directory. |
+| `--agent <name>` | Select `claude-code`, `codex`, or `cursor`; otherwise auto-detect. |
+| `--probe` | Run supported read-only runtime probes and embedded canaries. |
+| `--json` | Emit the stable machine-readable report contract. |
+| `--no-color` | Disable ANSI terminal colors. |
 
-## How this differs
+</details>
+
+<a id="core-features"></a>
+
+## ✨ Core features
+
+| | Capability | Why it matters |
+|---|---|---|
+| 🗂️ | **Configuration discovery and precedence** | Finds recognized sources from the repository root to the requested directory and explains which source wins. |
+| 🔬 | **Zero-write probes** | Uses read-only agent modes and traceable canaries where the vendor exposes enough evidence. |
+| 🧩 | **Four evidence levels** | Keeps “not followed” separate from “not loaded,” so a probabilistic model miss never becomes a false certainty. |
+| 📦 | **Human and machine output** | Renders a status-grouped terminal report by default and a stable JSON contract for CI with `--json`. |
+
+### How it works
+
+```mermaid
+flowchart LR
+    A["① Discover<br/>rules · skills · hooks · MCP"] --> B["② Resolve<br/>scope · priority · shadowing"]
+    B --> C["③ Probe safely<br/>runtime metadata · canaries"]
+    C --> D["④ Grade evidence<br/>effective · absent · uncertain"]
+```
+
+The adapter boundary keeps vendor-specific discovery and probing replaceable while the report contract stays stable.
+
+## ⚖️ How this differs
 
 | Approach | What it proves | What it cannot prove |
 |---|---|---|
-| Static config scanner | A declaration exists and parses | Runtime visibility or model adherence |
-| Harness compiler | The harness assembled a prompt/tool set | What another vendor's installed agent actually loaded |
-| `aec` | Precedence plus traceable runtime/negative evidence when available | Unobservable behavior; it reports this as `UNVERIFIED` |
+| Static config scanner | A declaration exists and parses. | Runtime visibility or model adherence. |
+| Harness compiler | The harness assembled a prompt and tool set. | What another vendor's installed agent actually loaded. |
+| **`aec`** | Precedence plus traceable runtime or negative evidence when available. | Unobservable behavior; it reports this honestly as `UNVERIFIED`. |
 
-## Evidence levels
+<a id="evidence-levels"></a>
+
+## 🚦 Evidence levels
 
 | Status | Meaning | Limitation |
 |---|---|---|
-| `CONFIRMED_EFFECTIVE` | A traceable canary or runtime listing matched the source. | Applies to the observed run and adapter version, not all future prompts. |
-| `CONFIRMED_NOT_LOADED` | A deterministic path, parse, precedence, missing-executable, or runtime probe proved invisibility. | Does not say whether the declaration itself is desirable. |
-| `LOADED_BUT_UNFOLLOWED` | Visibility was independently confirmed, but the sampled response missed the canary. | Model behavior is probabilistic; repeat samples before concluding. |
-| `UNVERIFIED` | The declaration was found but no safe zero-write observation could prove its state. | Absence of evidence is not evidence of absence. |
+| 🟢 `CONFIRMED_EFFECTIVE` | A traceable canary or runtime listing matched the source. | Applies to the observed run and adapter version, not every future prompt. |
+| 🔴 `CONFIRMED_NOT_LOADED` | A deterministic path, parse, precedence, missing-executable, or runtime probe proved invisibility. | Does not say whether the declaration itself is desirable. |
+| 🟠 `LOADED_BUT_UNFOLLOWED` | Visibility was independently confirmed, but the sampled response missed the canary. | Model behavior is probabilistic; repeat samples before concluding. |
+| ⚪ `UNVERIFIED` | The declaration was found, but no safe zero-write observation could prove its state. | Absence of evidence is not evidence of absence. |
 
-**Not followed does not mean not loaded.** `aec` only emits `LOADED_BUT_UNFOLLOWED` when visibility is known independently. Add a config line such as `AEC_CANARY: TEAM_RULE_7F3K`, then use `aec --probe`; the marker stays in your config and `aec` does not inject or rewrite it.
+> [!IMPORTANT]
+> **Not followed does not mean not loaded.** `aec` only emits `LOADED_BUT_UNFOLLOWED` when visibility is known independently. A canary miss without separate visibility evidence remains `UNVERIFIED`.
 
-## Tested agents and adapter versioning
+Add a marker such as `AEC_CANARY: TEAM_RULE_7F3K` to an existing instruction source, then run `aec --probe`. The marker stays in your configuration; `aec` does not inject or rewrite it.
 
-| Adapter | Tested profile | Confirmable now | Conservatively unverified |
+<a id="tested-agents"></a>
+
+## 🤖 Tested agents and adapter coverage
+
+| Agent | Tested profile | Confirmable today | Conservatively unverified |
 |---|---|---|---|
-| Claude Code | Official config profile checked 2026-10-20; live binary not present on the release machine | Unsupported `AGENTS.md`, invalid JSON, precedence, missing MCP executable; live MCP/canary when CLI is installed | Permissions and hooks that require a real operation |
-| Codex | `codex-cli 0.163.0-alpha.10.2` plus official config profile checked 2026-10-20 | `AGENTS.override.md` precedence, unreadable config, missing MCP executable; live MCP/canary | Operation-specific permissions and hooks without receipts |
-| Cursor Agent | Official config profile checked 2026-10-20; live binary not present on the release machine | Invalid JSON and missing MCP executable; live MCP listing when CLI is installed | Instruction adherence, skills, permissions, and hook firing |
+| 🟠 **Claude Code** | Official configuration profile checked 2026-10-20; live binary unavailable on the release machine. | Unsupported `AGENTS.md`, invalid JSON, precedence, missing MCP executable; live MCP and canary checks when installed. | Permissions and hooks that require a real operation. |
+| 🟢 **Codex** | `codex-cli 0.163.0-alpha.10.2`; official configuration profile checked 2026-10-20. | `AGENTS.override.md` precedence, unreadable config, missing MCP executable, live MCP and canary checks. | Operation-specific permissions and hooks without receipts. |
+| 🟠 **Cursor Agent** | Official configuration profile checked 2026-10-20; live binary unavailable on the release machine. | Invalid JSON, missing MCP executable, and live MCP listing when installed. | Instruction adherence, skills, permissions, and hook firing. |
 
-Adapters implement the same `discoverConfigs`, `probeVisibility`, and `runCanary` contract in `adapters/`. Their tested profile is kept beside the implementation so vendor-specific parsing can change without changing the report contract. Config locations follow the vendors' current documentation for [Claude Code memory](https://docs.anthropic.com/en/docs/claude-code/memory), [Codex `AGENTS.md`](https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide), and [Cursor rules](https://docs.cursor.com/context/rules).
+Adapters implement the same `discoverConfigs`, `probeVisibility`, and `runCanary` contract in [`adapters/`](adapters/). Their tested profile lives beside each implementation so vendor-specific behavior can evolve without changing the output schema.
 
-## FAQ
+## ❓ FAQ
 
-### Why can a canary be wrong?
+<details>
+<summary><strong>Why can a canary be wrong?</strong></summary>
 
 A model may ignore an instruction it did receive. A token miss without separate visibility evidence remains `UNVERIFIED`; only independently visible-but-missed sources become `LOADED_BUT_UNFOLLOWED`.
 
-### Which settings can only be `UNVERIFIED`?
+</details>
+
+<details>
+<summary><strong>Which settings can only be UNVERIFIED?</strong></summary>
 
 Permissions tied to a particular tool call, hooks that require a specific lifecycle event, and agent features without a read-only inspection endpoint stay unverified until that exact behavior can be observed safely.
 
-### How do I add another agent?
+</details>
 
-Implement the contract in `adapters/contract.js`, keep discovery and probing vendor-specific, register the adapter in `adapters/index.js`, and add fixtures for precedence, runtime absence, and canary classification.
+<details>
+<summary><strong>How do I add another agent?</strong></summary>
 
-## Star History
+Implement the contract in [`adapters/contract.js`](adapters/contract.js), keep discovery and probing vendor-specific, register the adapter in [`adapters/index.js`](adapters/index.js), and add fixtures for precedence, runtime absence, and canary classification.
 
-<!-- Replace OWNER/REPO after publishing. -->
+</details>
 
-`https://star-history.com/#OWNER/agent-effective-config&Date`
+## ⭐ Star history
 
-## License
+[![Star History Chart](https://api.star-history.com/svg?repos=LiChang1125/agent-effective-config&type=Date)](https://www.star-history.com/#LiChang1125/agent-effective-config&Date)
 
-MIT — see [LICENSE](LICENSE).
+## 📄 License
+
+Released under the [MIT License](LICENSE).
+
+<p align="center">
+  Built for developers who switch agents without lowering their evidence standards.<br />
+  <a href="https://github.com/LiChang1125/agent-effective-config/issues">Report an issue</a> ·
+  <a href="https://github.com/LiChang1125/agent-effective-config/discussions">Start a discussion</a>
+</p>
