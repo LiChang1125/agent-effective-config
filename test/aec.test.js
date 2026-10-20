@@ -6,8 +6,22 @@ import test from 'node:test';
 import { diagnose, STATUSES } from '../src/index.js';
 
 const projectRoot = path.resolve(import.meta.dirname, '..');
-const scenarioA = path.join(projectRoot, 'fixtures', 'scenario-a');
-const scenarioB = path.join(projectRoot, 'fixtures', 'scenario-b');
+const fixtureRoot = path.join(projectRoot, 'fixtures');
+let fixtureSandbox;
+let scenarioA;
+let scenarioB;
+
+test.before(() => {
+  fixtureSandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'aec-fixtures-'));
+  scenarioA = path.join(fixtureSandbox, 'scenario-a');
+  scenarioB = path.join(fixtureSandbox, 'scenario-b');
+  fs.cpSync(path.join(fixtureRoot, 'scenario-a'), scenarioA, { recursive: true });
+  fs.cpSync(path.join(fixtureRoot, 'scenario-b'), scenarioB, { recursive: true });
+});
+
+test.after(() => {
+  fs.rmSync(fixtureSandbox, { recursive: true, force: true });
+});
 
 function temporaryProject(files) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'aec-test-'));
