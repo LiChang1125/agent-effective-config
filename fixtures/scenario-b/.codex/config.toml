@@ -1,0 +1,7 @@
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+notify = ["aec-fixture-demo-notifier"]
+
+[mcp_servers.missing-local-server]
+command = "aec-fixture-missing-mcp-executable"
+args = []

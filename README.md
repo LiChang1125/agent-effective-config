@@ -6,7 +6,7 @@
 
 ![demo](demo.gif)
 
-Run `aec` in a Claude Code project and it separates declarations from observations: a missing MCP executable, an unsupported hook event, a shadowed permission set, and an instruction source Claude Code does not load. Each conclusion includes the evidence and the limit of what was observed.
+Run `aec` against the Codex fixture and it separates declarations from observations: `AGENTS.override.md` replaces `AGENTS.md`, an MCP executable is missing, and operation-specific permissions and hooks remain explicitly unverified. Each conclusion includes the evidence and the limit of what was observed.
 
 ## Why this exists
 

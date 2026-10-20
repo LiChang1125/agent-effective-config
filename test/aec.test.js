@@ -87,6 +87,16 @@ test('Codex adapter lets AGENTS.override.md replace AGENTS.md in one directory',
   }
 });
 
+test('scenario-b demonstrates Codex override and missing MCP evidence', async () => {
+  const report = await diagnose({ cwd: scenarioB, agent: 'codex' });
+  const instruction = report.findings.find((item) => item.source === 'AGENTS.md');
+  const mcp = report.findings.find((item) => item.source === '.codex/config.toml' && item.kind === 'mcp');
+  assert.equal(instruction.status, STATUSES.NOT_LOADED);
+  assert.equal(instruction.shadowedBy, 'AGENTS.override.md');
+  assert.equal(mcp.status, STATUSES.NOT_LOADED);
+  assert.match(mcp.evidence, /Executable not found/);
+});
+
 test('Cursor adapter discovers MDC rules and project MCP configuration', async () => {
   const directory = temporaryProject({
     '.cursor/rules/team.mdc': '---\nalwaysApply: true\n---\nBe concise.',
