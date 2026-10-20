@@ -6,7 +6,7 @@
 
 ![demo](demo.gif)
 
-Run `aec` in a Claude Code project and it separates declarations from observations: three rules are shadowed by `CLAUDE.local.md`, one hook is not registered, and one MCP server is not connected. Each conclusion includes the evidence and the limit of what was observed.
+Run `aec` in a Claude Code project and it separates declarations from observations: a missing MCP executable, an unsupported hook event, a shadowed permission set, and an instruction source Claude Code does not load. Each conclusion includes the evidence and the limit of what was observed.
 
 ## Why this exists
 
