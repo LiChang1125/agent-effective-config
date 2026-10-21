@@ -1,0 +1,21 @@
+{
+  "name": "agent-effective-config",
+  "interface": {
+    "displayName": "Agent Effective Config"
+  },
+  "plugins": [
+    {
+      "name": "agent-effective-config",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/LiChang1125/agent-effective-config.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

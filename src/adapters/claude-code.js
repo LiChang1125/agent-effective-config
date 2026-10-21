@@ -2,7 +2,7 @@ import path from 'node:path';
 import {
   directoriesFromRoot, exists, findExecutable, gitRoot, homePath, listSkillManifests,
   readJson, runReadOnly, uniqueSources,
-} from '../src/files.js';
+} from '../files.js';
 import { AgentAdapter, applyShadowGroups, canaryPrompt, classifySource, source } from './contract.js';
 import { CLAUDE_HOOK_EVENTS, mcpJsonSource, probeMcpList, rootRelativePriority, settingsSources } from './shared.js';
 

@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { AEC_VERSION, STATUSES } from './constants.js';
 import { displayPath } from './files.js';
-import { getAdapter } from '../adapters/index.js';
+import { getAdapter } from './adapters/index.js';
 
 function publicSource(source, cwd) {
   return {

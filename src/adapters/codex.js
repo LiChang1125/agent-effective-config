@@ -2,7 +2,7 @@ import path from 'node:path';
 import {
   directoriesFromRoot, exists, findExecutable, gitRoot, homePath,
   listFiles, listSkillManifests, readText, runReadOnly, uniqueSources,
-} from '../src/files.js';
+} from '../files.js';
 import { AgentAdapter, applyShadowGroups, canaryPrompt, classifySource, source } from './contract.js';
 import { commandFromTomlSection, probeMcpList, rootRelativePriority } from './shared.js';
 

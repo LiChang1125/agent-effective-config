@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { findExecutable, readJson, runReadOnly } from '../src/files.js';
+import { findExecutable, readJson, runReadOnly } from '../files.js';
 
 export const CLAUDE_HOOK_EVENTS = new Set([
   'SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PermissionRequest',

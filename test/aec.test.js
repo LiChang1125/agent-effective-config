@@ -6,7 +6,7 @@ import test from 'node:test';
 import { diagnose, STATUSES } from '../src/index.js';
 
 const projectRoot = path.resolve(import.meta.dirname, '..');
-const fixtureRoot = path.join(projectRoot, 'fixtures');
+const fixtureRoot = path.join(projectRoot, 'test', 'fixtures');
 let fixtureSandbox;
 let scenarioA;
 let scenarioB;

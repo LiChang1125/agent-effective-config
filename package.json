@@ -1,13 +1,14 @@
 {
   "name": "agent-effective-config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Probe-first diagnostics for the agent configuration that is actually effective in a working directory.",
   "type": "module",
   "bin": {
     "aec": "./bin/aec.js"
   },
   "scripts": {
-    "test": "node --test test/aec.test.js",
+    "test": "node --test test/aec.test.js test/plugin.test.js",
+    "test:plugin": "node --test test/plugin.test.js",
     "start": "node ./bin/aec.js"
   },
   "engines": {
@@ -15,9 +16,12 @@
   },
   "license": "MIT",
   "files": [
-    "adapters",
     "bin",
+    "skills",
     "src",
+    "outputs/aec-mascot.svg",
+    ".claude-plugin",
+    "plugin.json",
     "README.md",
     "LICENSE"
   ]

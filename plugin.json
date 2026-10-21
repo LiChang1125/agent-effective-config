@@ -1,0 +1,42 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agent-effective-config",
+  "version": "0.2.0",
+  "description": "Diagnose which rules, skills, permissions, hooks, and MCP servers are actually effective for Claude Code, Codex, and Cursor.",
+  "author": {
+    "name": "LiChang1125",
+    "url": "https://github.com/LiChang1125"
+  },
+  "homepage": "https://github.com/LiChang1125/agent-effective-config",
+  "repository": "https://github.com/LiChang1125/agent-effective-config",
+  "license": "MIT",
+  "keywords": [
+    "agent-config",
+    "claude-code",
+    "codex",
+    "cursor",
+    "diagnostics"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Agent Effective Config",
+        "shortDescription": "See which agent settings actually apply",
+        "longDescription": "Evidence-first diagnostics for effective instructions, skills, permissions, hooks, and MCP servers across Claude Code, Codex, and Cursor.",
+        "developerName": "LiChang1125",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Interactive",
+          "Read"
+        ],
+        "websiteURL": "https://github.com/LiChang1125/agent-effective-config",
+        "defaultPrompt": [
+          "Use aec-diagnose to inspect which agent configuration is effective in this project.",
+          "Use aec-diagnose to explain why an instruction, hook, permission, or MCP server is not active."
+        ],
+        "brandColor": "#14B8A6",
+        "logo": "./outputs/aec-mascot.svg"
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-PROJECT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 INSTALL_DIR=${AEC_INSTALL_DIR:-"$HOME/.local/bin"}
 
 printf 'Installing aec to %s (set AEC_INSTALL_DIR to choose another location).\n' "$INSTALL_DIR"

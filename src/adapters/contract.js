@@ -1,5 +1,5 @@
-import { STATUSES } from '../src/constants.js';
-import { firstCanary, runReadOnly } from '../src/files.js';
+import { STATUSES } from '../constants.js';
+import { firstCanary, runReadOnly } from '../files.js';
 
 export class AgentAdapter {
   constructor(name, testedVersions) {

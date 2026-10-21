@@ -1,0 +1,12 @@
+{
+  "name": "agent-effective-config",
+  "version": "0.2.0",
+  "description": "Evidence-first diagnostics for the agent configuration that is actually effective in a working directory.",
+  "author": {
+    "name": "LiChang1125",
+    "url": "https://github.com/LiChang1125"
+  },
+  "homepage": "https://github.com/LiChang1125/agent-effective-config",
+  "repository": "https://github.com/LiChang1125/agent-effective-config",
+  "license": "MIT"
+}

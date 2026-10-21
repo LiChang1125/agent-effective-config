@@ -2,7 +2,7 @@ import path from 'node:path';
 import {
   directoriesFromRoot, exists, gitRoot, homePath, listFiles,
   listSkillManifests, readJson, uniqueSources,
-} from '../src/files.js';
+} from '../files.js';
 import { AgentAdapter, applyShadowGroups, classifySource, source } from './contract.js';
 import { mcpJsonSource, probeMcpList, rootRelativePriority } from './shared.js';
 

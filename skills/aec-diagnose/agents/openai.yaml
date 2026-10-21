@@ -1,0 +1,4 @@
+interface:
+  display_name: "AEC Diagnose"
+  short_description: "See which agent settings actually apply"
+  default_prompt: "Use $aec-diagnose to inspect the effective agent configuration in this project and explain the evidence."
